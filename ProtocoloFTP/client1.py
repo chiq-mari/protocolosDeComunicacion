@@ -1,6 +1,6 @@
 from ftplib import FTP
 
-ftp= FTP('192.168.1.234')
+ftp= FTP('192.168.0.104')
 ftp.login("user", "12345")
 
 while True:

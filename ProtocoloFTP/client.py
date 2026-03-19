@@ -1,6 +1,6 @@
 from ftplib import FTP
 #py -m pyftpdlib -p 2121 -w
-#python -m pyftpdlib -p 21 -w -d C:\Users\maria\Desktop\Univ\Trimestre9\ClasesProtocolos\FTPclass\FTP\ftp_root
+#python -m pyftpdlib -p 21 -w -d C:\Users\....
 servidor = "192.168.1.234"
 port = 21 #21  # mismo puerto que pyftpdlib
 
