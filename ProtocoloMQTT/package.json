@@ -9,8 +9,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
+    "aedes": "^1.0.1",
     "mqtt": "^5.15.0"
   }
 }

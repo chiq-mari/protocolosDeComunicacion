@@ -1,8 +1,19 @@
 /* jshint esversion : 6 */
-"use strict";
+/*"use strict";
 //.\mosquitto_pub -t "home/kitchen/light" -m "Encendida"
 var mqtt = require('mqtt');
-var client = mqtt.connect({clientId: "001"});
+var client = mqtt.connect({clientId: "001"});*/
+
+
+
+
+
+
+import mqtt from 'mqtt'
+
+// Connect without credentials
+const client = mqtt.connect('mqtt://localhost:1883', { clientId: "001" });
+
 
 // 1. EL DIRECTORIO (Handlers)
 // Aquí guardamos qué función ejecutar según el tópico que llegue
