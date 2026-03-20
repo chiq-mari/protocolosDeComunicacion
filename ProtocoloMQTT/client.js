@@ -1,44 +1,54 @@
-//JavaScript Program for publish-subscribe model
 /* jshint esversion : 6 */
 "use strict";
-
-//Importing MQTT
+//.\mosquitto_pub -t "home/kitchen/light" -m "Encendida"
 var mqtt = require('mqtt');
 
-//Creating an instance of the client
-var client = mqtt.connect({clientId: "001"});
+//ip remoto
+const brokerUrl = 'mqtt://localhost';
+var client = mqtt.connect(brokerUrl, {
+    clientId: "mariangeles",
+    connectTimeout: 4000
+});
 
-//Definiting constants
-var topic = "home/kitchen/table";
-var message = "Table inside the kitchen";
-var options = {retain: false, qos: 1};
+// 1. EL DIRECTORIO (Handlers)
+// Aquí guardamos qué función ejecutar según el tópico que llegue
+const handlers = {
+    "home/kitchen/table": (msg) => console.log("🛋️  Mesa dice:", msg),
+    "home/kitchen/light": (msg) => console.log("💡 Luz dice:", msg),
+    "home/bedroom/tv":    (msg) => console.log("📺 TV dice:", msg),
+    ///////////////
+    /*
+    "home/bedroom/air conditioning":    (msg) => console.log(" air conditioning dice:", msg),
+    "home/bedroom/closet":    (msg) => console.log("closet dice:", msg),
+    */
+   ///////////////
+   /*
+   "home/bedroom/chair":    (msg) => console.log("chair dice:", msg)
+   */
+};
 
-//On successful connection
 client.on('connect', function () {
-    console.log(" After successful connection: ", client.connected);
-    //If client is connected, then publish on the topic
-    if (client.connected) {
-        console.log(" Publishing on topic: ", topic);
-        client.publish(topic, message, options);
+    console.log("Conectado exitosamente!");
+    
+    // 2. SUSCRIPCIÓN DINÁMICA
+    // En lugar de una sola variable, nos suscribimos a todos los canales del directorio
+    const canales = Object.keys(handlers); 
+    client.subscribe(canales, {qos: 1});
+    
+    console.log("Suscrito a:", canales.join(", "));
+});
+
+// 3. EL RECEPCIONISTA INTELIGENTE
+client.on('message', function (topic, message) {
+    const contenido = message.toString();
+
+    // Verificamos si el tópico existe en nuestro "directorio"
+    if (handlers[topic]) {
+        // Ejecutamos la función asociada a ese tópico
+        handlers[topic](contenido);
+    } else {
+        console.log(" Mensaje desconocido en:", topic);
     }
 });
 
-//On connectivity error
-client.on('error', function (error) {
-    console.log(" Connection error: ", error);
-});
-
-//On receiving message
-client.on('message', function (topic, message) {
-    console.log(" Received message: ", message.toString(), "on topic: ", topic);
-    client.end();
-});
-
-function init() {
-    //Subscribing to the topic
-    console.log("\n Subscribing to topic");
-    client.subscribe(topic, {qos: 1});
-}
-
-//Start of the program
-init();
+client.on('error', (error) => console.log("Error:", error));
