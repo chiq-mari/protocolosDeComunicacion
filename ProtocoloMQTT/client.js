@@ -1,7 +1,9 @@
 /* jshint esversion : 6 */
-"use strict";
+/*"use strict";
 //.\mosquitto_pub -t "home/kitchen/light" -m "Encendida"
-var mqtt = require('mqtt');
+var mqtt = require('mqtt');*/
+
+import mqtt from 'mqtt'
 
 //ip remoto
 const brokerUrl = 'mqtt://localhost';
